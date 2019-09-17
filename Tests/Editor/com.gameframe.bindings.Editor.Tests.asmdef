@@ -1,0 +1,1 @@
+{ "name": "com.gameframe.bindings.Editor.Tests", "references": [ "com.gameframe.bindings" ], "optionalUnityReferences": ["TestAssemblies"], "includePlatforms": [ "Editor" ], "excludePlatforms": [] }

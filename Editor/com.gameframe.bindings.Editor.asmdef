@@ -1,0 +1,1 @@
+{ "name": "com.gameframe.bindings.Editor", "references": [ "com.gameframe.bindings" ], "optionalUnityReferences": [], "includePlatforms": [ "Editor" ], "excludePlatforms": [] }
