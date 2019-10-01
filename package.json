@@ -1,14 +1,14 @@
 {
-    "name": "com.gameframe.bindings",
-    "displayName": "Gameframe.Bindings",
-    "version": "1.0.0",
-    "description": "Utility components for quickly binding data values to views.",
-    "unity": "",
-    "unityRelease": "",
-    "keywords": [],
-    "author": {
-        "name": "Cory Leach",
-        "email": "cory.leach@gmail.com",
-        "url": "https://github.com/coryleach"
-    }
+  "name": "com.gameframe.bindings",
+  "displayName": "Gameframe.Bindings",
+  "version": "1.0.0",
+  "description": "Utility components for quickly binding data values to views.",
+  "unity": "2018.4",
+  "unityRelease": "",
+  "keywords": [],
+  "author": {
+    "name": "Cory Leach",
+    "email": "cory.leach@gmail.com",
+    "url": "https://github.com/coryleach"
+  }
 }

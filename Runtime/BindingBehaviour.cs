@@ -7,113 +7,115 @@ using System;
 using System.ComponentModel;
 using UnityEngine;
 
-namespace GameJam.Bindings
+namespace Gameframe.Bindings
 {
-  public abstract class BindingBehaviour : MonoBehaviour
-  {
+	public class BindingBehaviour : MonoBehaviour
+	{
+		[SerializeField]
+		protected UnityEngine.Object dataContext;
+		public UnityEngine.Object DataContext
+		{
+			get => dataContext;
+			set
+			{
+				dataContext = value;
+				Initialize();
+				Refresh();
+			}
+		}
 
-    [SerializeField]
-    protected UnityEngine.Object dataContext;
-    public UnityEngine.Object DataContext
-    {
-      get { return dataContext; }
-      set {
-        dataContext = value;
-        Initialize();
-        Refresh();
-      }
-    }
+		[SerializeField]
+		private string propertyPath;
+		public string PropertyPath
+		{
+			get => propertyPath;
+			set => propertyPath = value;
+		}
 
-    [SerializeField]
-    string propertyPath;
-    public string PropertyPath
-    {
-      get { return propertyPath; }
-      set { propertyPath = value; }
-    }
+		private INotifyPropertyChanged propertyChangedNotifier;
+		private INotifyPropertyChanged PropertyChangedNotifier
+		{
+			get => propertyChangedNotifier;
+			set
+			{
+				if (propertyChangedNotifier != null)
+				{
+					propertyChangedNotifier.PropertyChanged -= PropertyChanged;
+				}
+				propertyChangedNotifier = value;
+				if (propertyChangedNotifier != null)
+				{
+					propertyChangedNotifier.PropertyChanged += PropertyChanged;
+				}
+			}
+		}
 
-    INotifyPropertyChanged propertyChangedNotifier;
-    private INotifyPropertyChanged PropertyChangedNotifier
-    {
-      get { return propertyChangedNotifier; }
-      set
-      {
-        if ( propertyChangedNotifier != null )
-        {
-          propertyChangedNotifier.PropertyChanged -= PropertyChanged;
-        }
-        propertyChangedNotifier = value;
-        if (propertyChangedNotifier != null)
-        {
-          propertyChangedNotifier.PropertyChanged += PropertyChanged;
-        }
-      }
-    }
+		private void PropertyChanged(object sender, PropertyChangedEventArgs args)
+		{
+			if (PropertyPath.Contains(args.PropertyName))
+			{
+				Refresh();
+			}
+		}
 
-    void PropertyChanged(object sender, PropertyChangedEventArgs args)
-    {
-      if ( PropertyPath.Contains(args.PropertyName) )
-      {
-        Refresh();
-      }
-    }
+		protected object GetPropertyValue()
+		{
+			object obj = dataContext;
 
-    protected object GetPropertyValue()
-    {
-      object obj = dataContext;
+			foreach (string property in propertyPath.Split('.'))
+			{
+				if (obj == null)
+				{
+					return null;
+				}
 
-      foreach (string property in propertyPath.Split('.'))
-      {
-        if (obj == null)
-        { 
-          return null; 
-        }
+				Type type = obj.GetType();
+				System.Reflection.PropertyInfo info = type.GetProperty(property);
+				if (info == null)
+				{
+					return null;
+				}
 
-        Type type = obj.GetType();
-        System.Reflection.PropertyInfo info = type.GetProperty(property);
-        if (info == null)
-        {
-          return null; 
-        }
+				obj = info.GetValue(obj, null);
+			}
 
-        obj = info.GetValue(obj, null);
-      }
+			return obj;
+		}
 
-      return obj;
-    }
+		private void OnEnable()
+		{
+			Initialize();
+			Refresh();
+		}
 
-    void OnEnable()
-    {
-      Initialize();
-      Refresh();
-    }
+		private void Initialize()
+		{
+			PropertyChangedNotifier = dataContext as INotifyPropertyChanged;
+		}
 
-    protected void Initialize()
-    {
-      PropertyChangedNotifier = dataContext as INotifyPropertyChanged;
-    }
-
-    protected abstract void Refresh();
+		protected virtual void Refresh()
+		{
+		}
 
 #if UNITY_EDITOR
 
-    void OnValidate()
+		private void OnValidate()
     {
-      if (dataContext != null)
-      {
+        if (dataContext != null)
+        {
         try
         {
-          Refresh();
+            Refresh();
         }
         catch (System.Exception e)
         {
-          // ignored
+            // ignored
         }
-      }
+        }
     }
 
 #endif
 
-  }
+	}
 
 }

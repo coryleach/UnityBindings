@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace GameJam.Bindings
+namespace Gameframe.Bindings
 {
   public class TextBindingBehaviour : BindingBehaviour
   {
-    [SerializeField]
-    Text text;
+    
+    [SerializeField] 
+    private Text text;
 
-    [SerializeField]
-    string format;
+    [SerializeField] 
+    private string format;
 
     [ContextMenu("Refresh")]
     protected override void Refresh()
