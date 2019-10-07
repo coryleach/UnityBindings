@@ -9,113 +9,115 @@ using UnityEngine;
 
 namespace Gameframe.Bindings
 {
-	public class BindingBehaviour : MonoBehaviour
-	{
-		[SerializeField]
-		protected UnityEngine.Object dataContext;
-		public UnityEngine.Object DataContext
-		{
-			get => dataContext;
-			set
-			{
-				dataContext = value;
-				Initialize();
-				Refresh();
-			}
-		}
+    public class BindingBehaviour : MonoBehaviour
+    {
+        [SerializeField]
+        protected UnityEngine.Object dataContext;
 
-		[SerializeField]
-		private string propertyPath;
-		public string PropertyPath
-		{
-			get => propertyPath;
-			set => propertyPath = value;
-		}
+        public UnityEngine.Object DataContext
+        {
+            get => dataContext;
+            set
+            {
+                dataContext = value;
+                Initialize();
+                Refresh();
+            }
+        }
 
-		private INotifyPropertyChanged propertyChangedNotifier;
-		private INotifyPropertyChanged PropertyChangedNotifier
-		{
-			get => propertyChangedNotifier;
-			set
-			{
-				if (propertyChangedNotifier != null)
-				{
-					propertyChangedNotifier.PropertyChanged -= PropertyChanged;
-				}
-				propertyChangedNotifier = value;
-				if (propertyChangedNotifier != null)
-				{
-					propertyChangedNotifier.PropertyChanged += PropertyChanged;
-				}
-			}
-		}
+        [SerializeField]
+        private string propertyPath;
 
-		private void PropertyChanged(object sender, PropertyChangedEventArgs args)
-		{
-			if (PropertyPath.Contains(args.PropertyName))
-			{
-				Refresh();
-			}
-		}
+        public string PropertyPath
+        {
+            get => propertyPath;
+            set => propertyPath = value;
+        }
 
-		protected object GetPropertyValue()
-		{
-			object obj = dataContext;
+        private INotifyPropertyChanged propertyChangedNotifier;
 
-			foreach (string property in propertyPath.Split('.'))
-			{
-				if (obj == null)
-				{
-					return null;
-				}
+        private INotifyPropertyChanged PropertyChangedNotifier
+        {
+            get => propertyChangedNotifier;
+            set
+            {
+                if (propertyChangedNotifier != null)
+                {
+                    propertyChangedNotifier.PropertyChanged -= PropertyChanged;
+                }
 
-				Type type = obj.GetType();
-				System.Reflection.PropertyInfo info = type.GetProperty(property);
-				if (info == null)
-				{
-					return null;
-				}
+                propertyChangedNotifier = value;
+                if (propertyChangedNotifier != null)
+                {
+                    propertyChangedNotifier.PropertyChanged += PropertyChanged;
+                }
+            }
+        }
 
-				obj = info.GetValue(obj, null);
-			}
+        private void PropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            if (PropertyPath.Contains(args.PropertyName))
+            {
+                Refresh();
+            }
+        }
 
-			return obj;
-		}
+        protected object GetPropertyValue()
+        {
+            object obj = dataContext;
 
-		private void OnEnable()
-		{
-			Initialize();
-			Refresh();
-		}
+            foreach (string property in propertyPath.Split('.'))
+            {
+                if (obj == null)
+                {
+                    return null;
+                }
 
-		private void Initialize()
-		{
-			PropertyChangedNotifier = dataContext as INotifyPropertyChanged;
-		}
+                Type type = obj.GetType();
+                System.Reflection.PropertyInfo info = type.GetProperty(property);
+                if (info == null)
+                {
+                    return null;
+                }
 
-		protected virtual void Refresh()
-		{
-		}
+                obj = info.GetValue(obj, null);
+            }
+
+            return obj;
+        }
+
+        private void OnEnable()
+        {
+            Initialize();
+            Refresh();
+        }
+
+        private void Initialize()
+        {
+            PropertyChangedNotifier = dataContext as INotifyPropertyChanged;
+        }
+
+        protected virtual void Refresh()
+        {
+        }
 
 #if UNITY_EDITOR
 
-		private void OnValidate()
-    {
-        if (dataContext != null)
+        private void OnValidate()
         {
-        try
-        {
-            Refresh();
+            if (dataContext != null)
+            {
+                try
+                {
+                    Refresh();
+                }
+                catch (System.Exception e)
+                {
+                    // ignored
+                }
+            }
         }
-        catch (System.Exception e)
-        {
-            // ignored
-        }
-        }
-    }
 
 #endif
-
-	}
-
+    }
 }
