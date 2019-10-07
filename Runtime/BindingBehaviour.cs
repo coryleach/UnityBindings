@@ -6,32 +6,39 @@
 using System;
 using System.ComponentModel;
 using UnityEngine;
+using Component = UnityEngine.Component;
 
 namespace Gameframe.Bindings
 {
+    [Serializable]
+    public class BindingDataContextInfo
+    {
+        public UnityEngine.Object dataContext;
+        public Component component;
+        public string property;
+    }
+    
     public class BindingBehaviour : MonoBehaviour
     {
         [SerializeField]
-        protected UnityEngine.Object dataContext;
-
+        protected BindingDataContextInfo _dataContextInfo = new BindingDataContextInfo();
+        
         public UnityEngine.Object DataContext
         {
-            get => dataContext;
+            get => _dataContextInfo.component == null ? _dataContextInfo.dataContext : _dataContextInfo.component;
             set
             {
-                dataContext = value;
+                _dataContextInfo.dataContext = value;
+                _dataContextInfo.component = null;
                 Initialize();
                 Refresh();
             }
         }
 
-        [SerializeField]
-        private string propertyPath;
-
         public string PropertyPath
         {
-            get => propertyPath;
-            set => propertyPath = value;
+            get => _dataContextInfo.property;
+            set => _dataContextInfo.property = value;
         }
 
         private INotifyPropertyChanged propertyChangedNotifier;
@@ -64,9 +71,9 @@ namespace Gameframe.Bindings
 
         protected object GetPropertyValue()
         {
-            object obj = dataContext;
+            object obj = DataContext;
 
-            foreach (string property in propertyPath.Split('.'))
+            foreach (string property in PropertyPath.Split('.'))
             {
                 if (obj == null)
                 {
@@ -94,7 +101,7 @@ namespace Gameframe.Bindings
 
         private void Initialize()
         {
-            PropertyChangedNotifier = dataContext as INotifyPropertyChanged;
+            PropertyChangedNotifier = DataContext as INotifyPropertyChanged;
         }
 
         protected virtual void Refresh()
@@ -105,7 +112,7 @@ namespace Gameframe.Bindings
 
         private void OnValidate()
         {
-            if (dataContext != null)
+            if (DataContext != null)
             {
                 try
                 {

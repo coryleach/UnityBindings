@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
 
 namespace Gameframe.Bindings.Editor
 {
@@ -10,42 +12,62 @@ namespace Gameframe.Bindings.Editor
     public class BindingEditor : UnityEditor.Editor
     {
         private SerializedProperty pDataContext;
-        private SerializedProperty pPath;
         
         private void OnEnable()
         {
-            pDataContext = serializedObject.FindProperty("dataContext");
-            pPath = serializedObject.FindProperty("propertyPath");
+            pDataContext = serializedObject.FindProperty("_dataContextInfo");
         }
 
-        public override void OnInspectorGUI()
+        public override VisualElement CreateInspectorGUI()
         {
-            base.OnInspectorGUI();
-
-            serializedObject.Update();
+            var container = new VisualElement();
             
-            var dataContext = pDataContext.objectReferenceValue;
+            // Create property fields.
+            // Add fields to the container.
+            var dataContextField = new PropertyField(pDataContext);
+            container.Add(dataContextField);
+            
+            var fields = serializedObject.targetObject.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.GetField);
 
-            if (dataContext == null)
+            if (fields.Length <= 0)
             {
-                //Display some kind of manual setup UI like typing in the path or whatever   
-                GUILayout.Label("No Data Context");
-                return;
+                return container;
             }
             
-            GUILayout.Label($"DataContext: {dataContext.GetType()}");
-
-            var properties = dataContext.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.GetField);
-            var propertyNames = properties.Select(x => x.Name).ToList();
-            int i = propertyNames.IndexOf(pPath.stringValue);
-            if (i < 0)
+            var fieldContainer = new VisualElement()
             {
-                i = 0;
+                style =
+                {
+                    paddingTop = 5,
+                    paddingBottom = 5,
+                    paddingLeft = 5,
+                    paddingRight = 5,
+                    marginBottom = 5,
+                    marginTop = 5,
+                    borderBottomWidth = 1,
+                    borderLeftWidth = 1,
+                    borderRightWidth = 1,
+                    borderTopWidth = 1,
+                    borderColor = Color.black,
+                    backgroundColor = new Color(0,0,0,0.1f)
+                }
+            };
+            
+            foreach (var field in fields)
+            {
+                if (field.Name.Equals("_dataContextInfo"))
+                {
+                    continue;
+                }
+                if (field.IsPublic || field.GetCustomAttribute<SerializeField>() != null)
+                {
+                    fieldContainer.Add(new PropertyField(serializedObject.FindProperty(field.Name)));
+                }
             }
-            i = EditorGUILayout.Popup("Path", i, propertyNames.ToArray());
-            pPath.stringValue = propertyNames[i];
-
-            serializedObject.ApplyModifiedProperties();
+            
+            container.Add(fieldContainer);
+            
+            return container;
         }
         
     }
