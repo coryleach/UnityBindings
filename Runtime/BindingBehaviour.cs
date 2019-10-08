@@ -3,77 +3,78 @@
 #pragma warning disable 0168
 #endif
 
-using System;
-using System.ComponentModel;
 using UnityEngine;
-using Component = UnityEngine.Component;
 
 namespace Gameframe.Bindings
 {
-    [Serializable]
-    public class BindingDataContextInfo
-    {
-        public UnityEngine.Object dataContext;
-        public Component component;
-        public string property;
-    }
-    
-    public class BindingBehaviour : MonoBehaviour
+    public abstract class BindingBehaviour : MonoBehaviour
     {
         [SerializeField]
-        protected BindingDataContextInfo _dataContextInfo = new BindingDataContextInfo();
+        private BindingDataContextInfo _dataContextInfo = new BindingDataContextInfo();
+
+        private Binding _binding = null;
+
+        public void SetSource(UnityEngine.Object obj, string path)
+        {
+            _dataContextInfo.dataContext = obj;
+            _dataContextInfo.component = null;
+            _binding?.SetSource(obj,path,enabled);
+        }
         
-        public UnityEngine.Object DataContext
+        private void OnEnable()
         {
-            get => _dataContextInfo.component == null ? _dataContextInfo.dataContext : _dataContextInfo.component;
-            set
+            if (_binding == null)
             {
-                _dataContextInfo.dataContext = value;
-                _dataContextInfo.component = null;
-                Initialize();
+                InitializeBinding();
+            }
+            else
+            {
+                _binding.Enabled = true;
                 Refresh();
             }
         }
 
-        public string PropertyPath
+        private void OnDisable()
         {
-            get => _dataContextInfo.property;
-            set => _dataContextInfo.property = value;
-        }
-
-        private INotifyPropertyChanged propertyChangedNotifier;
-
-        private INotifyPropertyChanged PropertyChangedNotifier
-        {
-            get => propertyChangedNotifier;
-            set
+            if (_binding != null)
             {
-                if (propertyChangedNotifier != null)
-                {
-                    propertyChangedNotifier.PropertyChanged -= PropertyChanged;
-                }
-
-                propertyChangedNotifier = value;
-                if (propertyChangedNotifier != null)
-                {
-                    propertyChangedNotifier.PropertyChanged += PropertyChanged;
-                }
+                _binding.Enabled = false;
             }
         }
 
-        private void PropertyChanged(object sender, PropertyChangedEventArgs args)
+        private void OnDestroy()
         {
-            if (PropertyPath.Contains(args.PropertyName))
+            if (_binding != null)
             {
-                Refresh();
+                _binding.Dispose();
+                _binding = null;
             }
         }
 
-        protected object GetPropertyValue()
+        private void InitializeBinding()
         {
-            object obj = DataContext;
+            _binding = new Binding();
+            _binding.SetSource(_dataContextInfo.BindableDataContext,_dataContextInfo.property,false);
+            SetupBindingTarget(_binding);
+            Refresh();
+        }
 
-            foreach (string property in PropertyPath.Split('.'))
+        protected abstract void SetupBindingTarget(Binding binding);
+
+        public virtual void Refresh()
+        {
+            _binding?.Refresh();
+        }
+
+        /*private static PropertyInfo GetPropertyInfo(object obj, string path)
+        {
+            if (obj == null || path == null)
+            {
+                return null;
+            }
+            Type type = obj.GetType();
+            return type.GetProperty(path);
+            foreach (var property in path.Split('.'))
             {
                 if (obj == null)
                 {
@@ -81,7 +82,7 @@ namespace Gameframe.Bindings
                 }
 
                 Type type = obj.GetType();
-                System.Reflection.PropertyInfo info = type.GetProperty(property);
+                info = type.GetProperty(property);
                 if (info == null)
                 {
                     return null;
@@ -89,40 +90,19 @@ namespace Gameframe.Bindings
 
                 obj = info.GetValue(obj, null);
             }
-
-            return obj;
-        }
-
-        private void OnEnable()
-        {
-            Initialize();
-            Refresh();
-        }
-
-        private void Initialize()
-        {
-            PropertyChangedNotifier = DataContext as INotifyPropertyChanged;
-        }
-
-        protected virtual void Refresh()
-        {
-        }
-
+            return info;
+        }*/
+        
 #if UNITY_EDITOR
 
         private void OnValidate()
         {
-            if (DataContext != null)
+            if (_binding != null)
             {
-                try
-                {
-                    Refresh();
-                }
-                catch (System.Exception e)
-                {
-                    // ignored
-                }
+                _binding.Dispose();
+                _binding = null;
             }
+            InitializeBinding();
         }
 
 #endif
