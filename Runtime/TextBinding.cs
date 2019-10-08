@@ -31,5 +31,17 @@ namespace Gameframe.Bindings
     {
       base.Refresh();
     }
+    
+#if UNITY_EDITOR
+    protected override void OnValidate()
+    {
+      if (text == null)
+      {
+        text = GetComponent<Text>();
+      }
+      base.OnValidate();
+    }
+#endif
+    
   }
 }

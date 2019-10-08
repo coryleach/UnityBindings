@@ -10,11 +10,25 @@ namespace Gameframe.Bindings
     {
         [SerializeField]
         private BindingDataContextInfo targetBindingDataContextInfo;
+
+        [SerializeField]
+        private bool convertToString = false;
         
         protected override void SetupBindingTarget(Binding binding)
-        { 
+        {
+            binding.Converter = Convert;
             binding.SetTarget(targetBindingDataContextInfo.BindableDataContext,targetBindingDataContextInfo.property);   
         }
+
+        private object Convert(object sourceData)
+        {
+            if (convertToString)
+            {
+                return sourceData.ToString();
+            }
+            return sourceData;
+        }
+        
     }
 }
 

@@ -94,8 +94,7 @@ namespace Gameframe.Bindings
         }*/
         
 #if UNITY_EDITOR
-
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (_binding != null)
             {
