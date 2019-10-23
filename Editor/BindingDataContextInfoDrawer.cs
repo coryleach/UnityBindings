@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Gameframe.Bindings.Editor
 {
@@ -41,6 +43,13 @@ namespace Gameframe.Bindings.Editor
                     backgroundColor = new Color(0,0,0,0.1f) 
                 }
             };
+
+            var headerAttribute = (HeaderAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(HeaderAttribute));
+            if (headerAttribute != null)
+            {
+                var header = new Label(headerAttribute.header);
+                rootContainer.Add(header);
+            }
             
             // Create property fields.
             pDataContext = property.FindPropertyRelative("dataContext");
@@ -78,7 +87,6 @@ namespace Gameframe.Bindings.Editor
             var targetGameObject = dataContext as GameObject;
             if (targetGameObject == null)
             {
-                
                 return;
             }
             

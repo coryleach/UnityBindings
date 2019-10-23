@@ -8,7 +8,7 @@ namespace Gameframe.Bindings
 {
     public class ComponentBinding : BindingBehaviour
     {
-        [SerializeField]
+        [SerializeField, Header("Target")]
         private BindingDataContextInfo targetBindingDataContextInfo;
 
         [SerializeField]
