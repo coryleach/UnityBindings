@@ -18,8 +18,12 @@ var binding = new Binding();
 //If your source implements INotifyPropertyChanged correctly changes will automatically propagate
 binding.SetSource(myData,"SourcePropertyName");
 binding.SetTarget(myView,"TargetPropertyName");
-//You can also force a refresh (If INotifyPropertyChange is implemented on the source this is usually unnecessary)
+//You can also force a refresh (unnecessary if source implements INotifyPropertyChange)
 binding.Refresh();
+//Temporarily disable bindings
+binding.Enabled = false;
+//Set a custom converter to transform source values before they are passed to the target
+binding.Converter = (x) => x.ToString();
 //Destroy the Binding
 binding.Dispose(); 
 ```
