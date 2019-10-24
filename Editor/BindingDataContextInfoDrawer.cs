@@ -13,7 +13,7 @@ namespace Gameframe.Bindings.Editor
     [CustomPropertyDrawer(typeof(BindingDataContextInfo))]
     public class BindingDataContextInfoDrawer : PropertyDrawer
     {
-        private PropertyField dataContextField;
+        private ObjectField dataContextField;
         private VisualElement rootContainer;
         private PopupField<Object> componentPopup;
         private PopupField<string> propertyPopup;
@@ -44,20 +44,24 @@ namespace Gameframe.Bindings.Editor
                 }
             };
 
-            var headerAttribute = (HeaderAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(HeaderAttribute));
-            if (headerAttribute != null)
-            {
-                var header = new Label(headerAttribute.header);
-                rootContainer.Add(header);
-            }
+            rootContainer.Bind(property.serializedObject);
             
             // Create property fields.
             pDataContext = property.FindPropertyRelative("dataContext");
             pComponent = property.FindPropertyRelative("component");
             pProperty = property.FindPropertyRelative("property");
 
+            rootContainer.Add(new Label(property.displayName));
+
             //Data Context Field is always available
-            dataContextField = new PropertyField(pDataContext);
+            dataContextField = new ObjectField("Object")
+            {
+                objectType = typeof(Object), 
+                bindingPath = pDataContext.propertyPath
+            };
+            
+            dataContextField.SetValueWithoutNotify(pDataContext.objectReferenceValue);
+            
             rootContainer.Add(dataContextField);
             
             UpdateSelectableComponents(pDataContext.objectReferenceValue);
@@ -65,6 +69,8 @@ namespace Gameframe.Bindings.Editor
             
             dataContextField.RegisterCallback<ChangeEvent<Object>>(evt =>
             {
+                pDataContext.objectReferenceValue = evt.newValue;
+
                 //Clear component when a new data context is set
                 pComponent.objectReferenceValue = null;
                 pProperty.stringValue = string.Empty;
@@ -90,7 +96,7 @@ namespace Gameframe.Bindings.Editor
                 return;
             }
             
-            List<Component> components = new List<Component>();
+            var components = new List<Component>();
             targetGameObject.GetComponents(components);
 
             var selectableObjects = components.Cast<Object>().ToList();
@@ -119,7 +125,7 @@ namespace Gameframe.Bindings.Editor
                 pComponent.serializedObject.ApplyModifiedProperties();
             });
 
-            rootContainer.Insert(1,componentPopup);
+            rootContainer.Insert(2,componentPopup);
         }
         
         private void UpdateSelectableProperties()
@@ -176,7 +182,7 @@ namespace Gameframe.Bindings.Editor
         {
             return $"{obj.GetType().Name} - InstanceId: {obj.GetInstanceID()}";
         }
-        
+
     }
 }
 

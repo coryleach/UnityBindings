@@ -10,14 +10,14 @@ namespace Gameframe.Bindings
     public abstract class BindingBehaviour : MonoBehaviour
     {
         [SerializeField]
-        private BindingDataContextInfo _dataContextInfo = new BindingDataContextInfo();
+        private BindingDataContextInfo _sourceDataInfo = new BindingDataContextInfo();
 
         private Binding _binding = null;
 
         public void SetSource(UnityEngine.Object obj, string path)
         {
-            _dataContextInfo.dataContext = obj;
-            _dataContextInfo.component = null;
+            _sourceDataInfo.dataContext = obj;
+            _sourceDataInfo.component = null;
             _binding?.SetSource(obj,path,enabled);
         }
         
@@ -54,7 +54,7 @@ namespace Gameframe.Bindings
         private void InitializeBinding()
         {
             _binding = new Binding();
-            _binding.SetSource(_dataContextInfo.BindableDataContext,_dataContextInfo.property,false);
+            _binding.SetSource(_sourceDataInfo.BindableDataContext,_sourceDataInfo.property,false);
             SetupBindingTarget(_binding);
             Refresh();
         }
