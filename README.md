@@ -16,7 +16,7 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 ```js
 {
   "dependencies": {
-    "com.gameframe.infotables": "https://github.com/coryleach/UnityBindings.git#1.0.0",
+    "com.gameframe.bindings": "https://github.com/coryleach/UnityBindings.git#1.0.0",
     ...
   },
 }
