@@ -6,7 +6,23 @@
   </a>
 </p>
 
-> This is a library of binding components that allow you to quickly wire data sources to target properties via the inspector.</br>
+> This is a library of binding components that allow you to quickly wire data sources to target properties via the inspector.</br></br>
+> Binding changes propagate via the System.ComponentModel.INotifyPropertyChanged interface but the included binding components will also refresh their target properties in OnEnable.</br></br>
+> A general purpose ComponentBinding monobehaviour is included to wire any to UnityEngine.Objects together as well as a TextBinding for quick and simple binding to text fields.
+
+## Usage
+
+```C#
+//Bindings can be created in code as follows
+var binding = new Binding();
+//If your source implements INotifyPropertyChanged correctly changes will automatically propagate
+binding.SetSource(myData,"SourcePropertyName");
+binding.SetTarget(myView,"TargetPropertyName");
+//You can also force a refresh (If INotifyPropertyChange is implemented on the source this is usually unnecessary)
+binding.Refresh();
+//Destroy the Binding
+binding.Dispose(); 
+```
 
 ## Install
 
