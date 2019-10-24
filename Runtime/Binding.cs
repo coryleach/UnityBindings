@@ -22,6 +22,13 @@ namespace Gameframe.Bindings
         public bool Enabled = true;
         public Func<object, object> Converter = null;
         
+        /// <summary>
+        /// Set the binding source. This hooks up where your data comes from.
+        /// If the dataContext implements INotifyPropertyChanged it will also set up to listen for change events
+        /// </summary>
+        /// <param name="dataContext">The object to be used as the data context</param>
+        /// <param name="path">path to the property you wish to bind to</param>
+        /// <param name="refresh">if true the property will be immediately refreshed after binding is updated</param>
         public void SetSource(object dataContext, string path, bool refresh = true)
         {
             _source = dataContext;
@@ -34,6 +41,13 @@ namespace Gameframe.Bindings
             }
         }
         
+        /// <summary>
+        /// Set the binding target. This is the property that gets set when the binding is refreshed
+        /// If the source implements INotifyPropertyChanged the target should get refreshed automatically
+        /// </summary>
+        /// <param name="dataContext">target that contains the property at path</param>
+        /// <param name="path">path to the property that will be set</param>
+        /// <param name="refresh">If true the binding will refresh immediately after being set</param>
         public void SetTarget(object dataContext, string path, bool refresh = true)
         {
             _target = dataContext;
