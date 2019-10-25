@@ -8,7 +8,7 @@
 
 > This is a library of binding components that allow you to quickly wire data sources to target properties via the inspector.</br></br>
 > Binding changes propagate via the System.ComponentModel.INotifyPropertyChanged interface but the included binding components will also refresh their target properties in OnEnable.</br></br>
-> A general purpose ComponentBinding monobehaviour is included to wire any to UnityEngine.Objects together as well as a TextBinding for quick and simple binding to text fields.
+> A general purpose ComponentBinding monobehaviour is included to wire any two UnityEngine.Objects together as well as a TextBinding for quick and simple binding to text fields.
 
 ## Usage
 
