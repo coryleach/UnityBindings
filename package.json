@@ -1,7 +1,7 @@
 {
   "name": "com.gameframe.bindings",
   "displayName": "Gameframe.Bindings",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Utility components for quickly binding data values to views.",
   "keywords": [],
   "author": {
