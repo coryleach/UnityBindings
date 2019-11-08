@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to com.gameframe.bindings 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-blue.svg?cacheSeconds=2592000" />
   <a href="https://twitter.com/coryleach">
     <img alt="Twitter: coryleach" src="https://img.shields.io/twitter/follow/coryleach.svg?style=social" target="_blank" />
   </a>
@@ -41,7 +41,7 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 ```js
 {
   "dependencies": {
-    "com.gameframe.bindings": "https://github.com/coryleach/UnityBindings.git#1.0.0",
+    "com.gameframe.bindings": "https://github.com/coryleach/UnityBindings.git#1.0.1",
     ...
   },
 }
