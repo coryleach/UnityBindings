@@ -11,7 +11,7 @@ namespace Gameframe.Bindings
     public class ComponentBinding : BindingBehaviour
     {
         [SerializeField]
-        private BindingDataContextInfo targetPropertyInfo;
+        private BindingDataContextInfo targetPropertyInfo = null;
 
         [SerializeField]
         private bool convertToString = false;
