@@ -6,10 +6,10 @@ namespace Gameframe.Bindings
   public class TextBinding : BindingBehaviour
   {
     [SerializeField] 
-    private Text text;
+    private Text text = null;
 
     [SerializeField] 
-    private string format;
+    private string format = string.Empty;
     
     protected override void SetupBindingTarget(Binding binding)
     {
