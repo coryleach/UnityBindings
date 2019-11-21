@@ -10,6 +10,20 @@
 > Binding changes propagate via the System.ComponentModel.INotifyPropertyChanged interface but the included binding components will also refresh their target properties in OnEnable.</br></br>
 > A general purpose ComponentBinding monobehaviour is included to wire any two UnityEngine.Objects together as well as a TextBinding for quick and simple binding to text fields.
 
+## Quick Package Install
+
+#### Using UnityPackageManager (for Unity 2018.3 or later)
+
+Find the manifest.json file in the Packages folder of your project and edit it to look like this:
+```js
+{
+  "dependencies": {
+    "com.gameframe.bindings": "https://github.com/coryleach/UnityBindings.git#1.0.2",
+    ...
+  },
+}
+```
+
 ## Usage
 
 ```C#
@@ -31,20 +45,6 @@ binding.Converter = (x) => x.ToString();
 
 //Destroy the Binding
 binding.Dispose(); 
-```
-
-## Install
-
-#### Using UnityPackageManager (for Unity 2018.3 or later)
-
-Find the manifest.json file in the Packages folder of your project and edit it to look like this:
-```js
-{
-  "dependencies": {
-    "com.gameframe.bindings": "https://github.com/coryleach/UnityBindings.git#1.0.2",
-    ...
-  },
-}
 ```
 
 ## Author
