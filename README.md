@@ -28,7 +28,7 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 
 ```C#
 //Bindings can be created in code as follows
-//Currently all bindings are one way
+//Currently all bindings are one way from source to target
 var binding = new Binding();
 
 //If your source implements INotifyPropertyChanged correctly changes will automatically propagate
