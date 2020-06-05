@@ -8,6 +8,9 @@ using UnityEngine.Serialization;
 
 namespace Gameframe.Bindings
 {
+    /// <summary>
+    /// This component will create a binding between any two UnityEngine.Object types 
+    /// </summary>
     public class ComponentBinding : BindingBehaviour
     {
         [SerializeField]

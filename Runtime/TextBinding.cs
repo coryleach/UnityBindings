@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace Gameframe.Bindings
 {
+  /// <summary>
+  /// Used to display text via binding
+  /// </summary>
   public class TextBinding : BindingBehaviour
   {
     [SerializeField] 

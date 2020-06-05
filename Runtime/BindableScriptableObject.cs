@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -6,12 +7,18 @@ using UnityEngine;
 namespace Gameframe.Bindings
 {
     /// <summary>
-    /// MonoBehaviour that provides property changed events for bindings through the INotifyPropertyChanged interface
+    /// ScriptableObject that provides property change events for bindings via the INotifyPropertyChanged interface
     /// </summary>
-    public abstract class BindableMonoBehaviour : MonoBehaviour, INotifyPropertyChanged
+    public abstract class BindableScriptableObject : ScriptableObject, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
+        protected virtual void OnEnable()
+        {
+            //We need to clear out the subscribed bindings between editor play sessions
+            PropertyChanged = null;
+        }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -37,5 +44,3 @@ namespace Gameframe.Bindings
         }
     }
 }
-
-

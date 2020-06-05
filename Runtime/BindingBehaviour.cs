@@ -7,6 +7,10 @@ using UnityEngine;
 
 namespace Gameframe.Bindings
 {
+    /// <summary>
+    /// Serves as the base class for components that create bindings
+    /// See TextBinding as an example
+    /// </summary>
     public abstract class BindingBehaviour : MonoBehaviour
     {
         [SerializeField]
@@ -65,33 +69,6 @@ namespace Gameframe.Bindings
         {
             _binding?.Refresh();
         }
-
-        /*private static PropertyInfo GetPropertyInfo(object obj, string path)
-        {
-            if (obj == null || path == null)
-            {
-                return null;
-            }
-            Type type = obj.GetType();
-            return type.GetProperty(path);
-            foreach (var property in path.Split('.'))
-            {
-                if (obj == null)
-                {
-                    return null;
-                }
-
-                Type type = obj.GetType();
-                info = type.GetProperty(property);
-                if (info == null)
-                {
-                    return null;
-                }
-
-                obj = info.GetValue(obj, null);
-            }
-            return info;
-        }*/
         
 #if UNITY_EDITOR
         protected virtual void OnValidate()
@@ -103,7 +80,6 @@ namespace Gameframe.Bindings
             }
             InitializeBinding();
         }
-
 #endif
     }
 }
