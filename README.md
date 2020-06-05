@@ -38,6 +38,8 @@ Changes between 'DOC START' and 'DOC END' will not be modified by readme update 
 
 ## Usage
 
+For an example of how the components are used import the package included in the Demo folder after installing this package.
+
 ```C#
 //Bindings can be created in code as follows
 //Currently all bindings are one way from source to target
