@@ -53,7 +53,10 @@ namespace Gameframe.Bindings.Editor
                     borderLeftWidth = 1,
                     borderRightWidth = 1,
                     borderTopWidth = 1,
-                    borderColor = Color.black,
+                    borderBottomColor = Color.black,
+                    borderLeftColor = Color.black,
+                    borderRightColor = Color.black,
+                    borderTopColor = Color.black,
                     backgroundColor = new Color(0, 0, 0, 0.1f)
                 }
             };
