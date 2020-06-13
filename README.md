@@ -1,10 +1,12 @@
 <h1 align="center">Gameframe.Bindings 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.3-blue.svg?cacheSeconds=2592000" />
-  <a href="https://twitter.com/Cory Leach">
-    <img alt="Twitter: coryleach" src="https://img.shields.io/twitter/follow/coryleach.svg?style=social" target="_blank" />
-  </a>
-</p>
+
+<!-- BADGE-START -->
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d2749fdbc70f422a9d1efccb56d48bff)](https://www.codacy.com/manual/coryleach/UnityBindings?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=coryleach/UnityBindings&amp;utm_campaign=Badge_Grade)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/coryleach/UnityBindings?include_prereleases)
+[![license](https://img.shields.io/github/license/coryleach/UnityBindings)](https://github.com/coryleach/UnityBindings/blob/master/LICENSE)
+
+[![twitter](https://img.shields.io/twitter/follow/coryleach.svg?style=social)](https://twitter.com/coryleach)
+<!-- BADGE-END -->
 
 This is a library of binding components that allow you to quickly wire data sources to target properties via the inspector.    
     
