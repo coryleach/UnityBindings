@@ -85,7 +85,7 @@ namespace Gameframe.Bindings.Editor
         }
 
 
-        private VisualElement CreateFieldFromProperty(SerializedProperty property)
+        private static VisualElement CreateFieldFromProperty(SerializedProperty property)
         {
             SerializedPropertyType propertyType = property.propertyType;
 
