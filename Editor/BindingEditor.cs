@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Gameframe.Bindings.Editor
 {
@@ -85,9 +86,6 @@ namespace Gameframe.Bindings.Editor
         {
             SerializedPropertyType propertyType = property.propertyType;
 
-            /*if (EditorGUI.HasVisibleChildFields(property))
-              return this.CreateFoldout(property);*/
-
             //Ripped this from some decompiled internal unity code so it's wonky. Could fix it if there is every an actual need
             switch (propertyType + 1)
             {
@@ -111,7 +109,7 @@ namespace Gameframe.Bindings.Editor
                         type = typeof(UnityEngine.Object);
                     }
                     field1.objectType = type;
-                    return ConfigureField<ObjectField, UnityEngine.Object>(field1, property);
+                    return ConfigureField<ObjectField, Object>(field1, property);
 
                 case SerializedPropertyType.Enum:
                     return ConfigureField<LayerMaskField, int>(new LayerMaskField(), property);
@@ -167,7 +165,7 @@ namespace Gameframe.Bindings.Editor
             }
         }
 
-        private VisualElement ConfigureField<TField, TValue>(
+        private static VisualElement ConfigureField<TField, TValue>(
             TField field,
             SerializedProperty property)
             where TField : BaseField<TValue>
@@ -186,15 +184,15 @@ namespace Gameframe.Bindings.Editor
             return field;
         }
 
-        private static FieldInfo GetFieldInfoFromProperty(SerializedProperty property, out Type type)
+        private static void GetFieldInfoFromProperty(SerializedProperty property, out Type type)
         {
-            Type typeFromProperty = GetScriptTypeFromProperty(property);
+            var typeFromProperty = GetScriptTypeFromProperty(property);
             if ((object) typeFromProperty != null)
             {
-                return GetFieldInfoFromPropertyPath(typeFromProperty, property.propertyPath, out type);
+                GetFieldInfoFromPropertyPath(typeFromProperty, property.propertyPath, out type);
+                return;
             }
             type = null;
-            return null;
         }
         
         private static Type GetScriptTypeFromProperty(SerializedProperty property)
