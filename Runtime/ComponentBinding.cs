@@ -14,10 +14,10 @@ namespace Gameframe.Bindings
     public class ComponentBinding : BindingBehaviour
     {
         [SerializeField]
-        private BindingDataContextInfo targetPropertyInfo = null;
+        private BindingDataContextInfo targetPropertyInfo;
 
         [SerializeField]
-        private bool convertToString = false;
+        private bool convertToString;
         
         protected override void SetupBindingTarget(Binding binding)
         {

@@ -19,6 +19,11 @@ namespace Gameframe.Bindings
             PropertyChanged = null;
         }
 
+        protected virtual void OnDisable()
+        {
+            PropertyChanged = null;
+        }
+        
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

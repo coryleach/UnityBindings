@@ -15,13 +15,14 @@ namespace Gameframe.Bindings
         private object _target = null;
 
         private string _sourcePath = null;
-        private string _targetPath = null;
 
         private PropertyInfo _sourceProperty = null;
         private PropertyInfo _targetProperty = null;
         
         private INotifyPropertyChanged _propertyChangedNotifier;
 
+        private bool disposed = false;
+        
         /// <summary>
         /// Error context is passed to any error logs so that errors selected in the console
         /// Will direct the user to the associated context object
@@ -67,7 +68,6 @@ namespace Gameframe.Bindings
         public void SetTarget(object dataContext, string path, bool refresh = true)
         {
             _target = dataContext;
-            _targetPath = path;
             _targetProperty = GetPropertyInfo(dataContext, path);
             if (refresh)
             {
@@ -80,11 +80,11 @@ namespace Gameframe.Bindings
         /// </summary>
         public void Refresh()
         {
-            if (_target == null || _source == null || _targetProperty == null || _sourceProperty == null)
+            if (_target == null || _source == null || _targetProperty == null || _sourceProperty == null || disposed)
             {
                 return;
             }
-            
+
             try
             {
                 var sourceValue = _sourceProperty.GetValue(_source, null);
@@ -92,24 +92,21 @@ namespace Gameframe.Bindings
                 {
                     sourceValue = Converter(sourceValue);
                 }
-                _targetProperty.SetValue(_target,  sourceValue);
+                _targetProperty.SetValue(_target, sourceValue);
             }
             catch (Exception e)
             {
                 Debug.LogException(e, ErrorContext);
             }
         }
-        
-        /// <summary>
-        /// Destroys the binding so changes will no longer propagate 
-        /// </summary>
-        public void Dispose()
-        { 
-            SetPropertyChangedNotifier(null);   
-        }
-        
+
         private void PropertyChanged(object sender, PropertyChangedEventArgs args)
         {
+            if (disposed)
+            {
+                throw new ObjectDisposedException("Binding was disposed but still getting property changed events.");
+            }
+            
             if ( _targetProperty == null || !Enabled )
             {
                 return;
@@ -141,6 +138,23 @@ namespace Gameframe.Bindings
             if (_propertyChangedNotifier != null)
             {
                 _propertyChangedNotifier.PropertyChanged += PropertyChanged;
+            }
+        }
+        
+        /// <summary>
+        /// Destroys the binding so changes will no longer propagate 
+        /// </summary>
+        public void Dispose()
+        {
+            disposed = true;
+            SetPropertyChangedNotifier(null); 
+        }
+        
+        ~Binding()
+        {
+            if (!disposed)
+            {
+                Dispose();
             }
         }
         

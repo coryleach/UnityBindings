@@ -1,9 +1,6 @@
-﻿#if UNITY_EDITOR
-//Disable warning about unused variable in exception in the OnValidate function
-#pragma warning disable 0168
-#endif
-
+﻿using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Gameframe.Bindings
 {
@@ -16,9 +13,10 @@ namespace Gameframe.Bindings
         [SerializeField]
         private BindingDataContextInfo _sourceDataInfo = new BindingDataContextInfo();
 
-        private Binding _binding = null;
+        [NonSerialized]
+        private Binding _binding;
 
-        public void SetSource(UnityEngine.Object obj, string path)
+        public void SetSource(Object obj, string path)
         {
             _sourceDataInfo.dataContext = obj;
             _sourceDataInfo.component = null;
@@ -69,17 +67,5 @@ namespace Gameframe.Bindings
         {
             _binding?.Refresh();
         }
-        
-#if UNITY_EDITOR
-        protected virtual void OnValidate()
-        {
-            if (_binding != null)
-            {
-                _binding.Dispose();
-                _binding = null;
-            }
-            InitializeBinding();
-        }
-#endif
     }
 }

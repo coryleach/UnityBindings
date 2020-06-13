@@ -13,7 +13,6 @@ namespace Gameframe.Bindings.Editor
     [CustomPropertyDrawer(typeof(BindingDataContextInfo))]
     public class BindingDataContextInfoDrawer : PropertyDrawer
     {
-        private ObjectField dataContextField;
         private VisualElement rootContainer;
         private PopupField<Object> componentPopup;
         private PopupField<string> propertyPopup;
@@ -25,7 +24,7 @@ namespace Gameframe.Bindings.Editor
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             // Create property container element.
-            rootContainer = new VisualElement()
+            rootContainer = new VisualElement
             {
                 style =
                 {
@@ -54,7 +53,7 @@ namespace Gameframe.Bindings.Editor
             rootContainer.Add(new Label(property.displayName));
 
             //Data Context Field is always available
-            dataContextField = new ObjectField("Object")
+            var dataContextField = new ObjectField("Object")
             {
                 objectType = typeof(Object), 
                 bindingPath = pDataContext.propertyPath
