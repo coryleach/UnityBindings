@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Gameframe.Bindings;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Gameframe.Bindings
 {
