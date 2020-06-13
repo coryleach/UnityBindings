@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Gameframe.Bindings.Editor
 {
@@ -13,7 +14,7 @@ namespace Gameframe.Bindings.Editor
     public class BindingEditor : UnityEditor.Editor
     {
         private SerializedProperty pDataContext;
-        private List<BindingDataContextInfoDrawer> _drawerList = null;
+        private List<BindingDataContextInfoDrawer> _drawerList;
         
         private void OnEnable()
         {
@@ -38,7 +39,7 @@ namespace Gameframe.Bindings.Editor
                 return container;
             }
 
-            var fieldContainer = new VisualElement()
+            var fieldContainer = new VisualElement
             {
                 style =
                 {
@@ -52,7 +53,10 @@ namespace Gameframe.Bindings.Editor
                     borderLeftWidth = 1,
                     borderRightWidth = 1,
                     borderTopWidth = 1,
-                    borderColor = Color.black,
+                    borderBottomColor = Color.black,
+                    borderLeftColor = Color.black,
+                    borderRightColor = Color.black,
+                    borderTopColor = Color.black,
                     backgroundColor = new Color(0, 0, 0, 0.1f)
                 }
             };
@@ -81,12 +85,9 @@ namespace Gameframe.Bindings.Editor
         }
 
 
-        private VisualElement CreateFieldFromProperty(SerializedProperty property)
+        private static VisualElement CreateFieldFromProperty(SerializedProperty property)
         {
             SerializedPropertyType propertyType = property.propertyType;
-
-            /*if (EditorGUI.HasVisibleChildFields(property))
-              return this.CreateFoldout(property);*/
 
             //Ripped this from some decompiled internal unity code so it's wonky. Could fix it if there is every an actual need
             switch (propertyType + 1)
@@ -111,7 +112,7 @@ namespace Gameframe.Bindings.Editor
                         type = typeof(UnityEngine.Object);
                     }
                     field1.objectType = type;
-                    return ConfigureField<ObjectField, UnityEngine.Object>(field1, property);
+                    return ConfigureField<ObjectField, Object>(field1, property);
 
                 case SerializedPropertyType.Enum:
                     return ConfigureField<LayerMaskField, int>(new LayerMaskField(), property);
@@ -136,7 +137,6 @@ namespace Gameframe.Bindings.Editor
                   IntegerField integerField = new IntegerField();
                   integerField.SetValueWithoutNotify(property.intValue);
                   integerField.isDelayed = true;
-                  //integerField.RegisterValueChangedCallback<int>((EventCallback<ChangeEvent<int>>) (e => this.UpdateArrayFoldout(e, this, this.m_ParentPropertyField)));
                   return ConfigureField<IntegerField, int>(integerField, property);
 
                 case SerializedPropertyType.AnimationCurve:
@@ -168,7 +168,7 @@ namespace Gameframe.Bindings.Editor
             }
         }
 
-        private VisualElement ConfigureField<TField, TValue>(
+        private static VisualElement ConfigureField<TField, TValue>(
             TField field,
             SerializedProperty property)
             where TField : BaseField<TValue>
@@ -181,23 +181,21 @@ namespace Gameframe.Bindings.Editor
             if (label != null)
             {
                 label.userData = property.Copy();
-                //label.RegisterCallback<MouseUpEvent>(new EventCallback<MouseUpEvent>(this.RightClickMenuEvent), TrickleDown.NoTrickleDown);
             }
 
             field.labelElement.AddToClassList(PropertyField.labelUssClassName);
-            //field.visualInput.AddToClassList(PropertyField.inputUssClassName);
             return field;
         }
 
-        private static FieldInfo GetFieldInfoFromProperty(SerializedProperty property, out Type type)
+        private static void GetFieldInfoFromProperty(SerializedProperty property, out Type type)
         {
-            Type typeFromProperty = GetScriptTypeFromProperty(property);
+            var typeFromProperty = GetScriptTypeFromProperty(property);
             if ((object) typeFromProperty != null)
             {
-                return GetFieldInfoFromPropertyPath(typeFromProperty, property.propertyPath, out type);
+                GetFieldInfoFromPropertyPath(typeFromProperty, property.propertyPath, out type);
+                return;
             }
             type = null;
-            return null;
         }
         
         private static Type GetScriptTypeFromProperty(SerializedProperty property)
@@ -219,22 +217,23 @@ namespace Gameframe.Bindings.Editor
         {
             FieldInfo fieldInfo1 = null;
             type = host;
-            string[] strArray = path.Split('.');
-            for (int index = 0; index < strArray.Length; ++index)
+            var strArray = path.Split('.');
+            var index = 0;
+            while ( index < strArray.Length )
             {
-                string name = strArray[index];
+                var name = strArray[index];
                 if (index < strArray.Length - 1 && name == "Array" && strArray[index + 1].StartsWith("data["))
                 {
                     if (type.IsArrayOrList())
                     {
                         type = type.GetArrayOrListElementType();
                     }
-                    ++index;
+                    index++;
                 }
                 else
                 {
                     FieldInfo fieldInfo2 = null;
-                    for (Type type1 = type; (object) fieldInfo2 == null && (object) type1 != null; type1 = type1.BaseType)
+                    for (var type1 = type; (object) fieldInfo2 == null && (object) type1 != null; type1 = type1.BaseType)
                     {
                         fieldInfo2 = type1.GetField(name,BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
                     }
@@ -246,6 +245,7 @@ namespace Gameframe.Bindings.Editor
                     fieldInfo1 = fieldInfo2;
                     type = fieldInfo1.FieldType;
                 }
+                index++;
             }
             return fieldInfo1;
         }
@@ -262,9 +262,15 @@ namespace Gameframe.Bindings.Editor
         internal static Type GetArrayOrListElementType(this System.Type listType)
         {
             if (listType.IsArray)
+            {
                 return listType.GetElementType();
-            if (listType.IsGenericType && (object) listType.GetGenericTypeDefinition() == (object) typeof(List<>))
+            }
+
+            if (listType.IsGenericType && listType.GetGenericTypeDefinition() == typeof(List<>))
+            {
                 return listType.GetGenericArguments()[0];
+            }
+            
             return null;
         }
     }

@@ -9,7 +9,7 @@ namespace Gameframe.Bindings
   public class TextBinding : BindingBehaviour
   {
     [SerializeField] 
-    private Text text = null;
+    private Text text;
 
     [SerializeField] 
     private string format = string.Empty;
@@ -36,13 +36,12 @@ namespace Gameframe.Bindings
     }
     
 #if UNITY_EDITOR
-    protected override void OnValidate()
+    protected void OnValidate()
     {
       if (text == null)
       {
         text = GetComponent<Text>();
       }
-      base.OnValidate();
     }
 #endif
     
