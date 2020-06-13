@@ -11,34 +11,49 @@ namespace Gameframe.Bindings
     /// </summary>
     public class Binding : IDisposable
     {
-        private object _source = null;
-        private object _target = null;
+        private object _source;
+        private object _target;
 
-        private string _sourcePath = null;
+        private string _sourcePath;
 
-        private PropertyInfo _sourceProperty = null;
-        private PropertyInfo _targetProperty = null;
+        private PropertyInfo _sourceProperty;
+        private PropertyInfo _targetProperty;
         
         private INotifyPropertyChanged _propertyChangedNotifier;
 
-        private bool disposed = false;
-        
+        private bool disposed;
+
         /// <summary>
         /// Error context is passed to any error logs so that errors selected in the console
         /// Will direct the user to the associated context object
         /// </summary>
-        public UnityEngine.Object ErrorContext = null;
-        
+        private UnityEngine.Object errorContext;
+        public UnityEngine.Object ErrorContext
+        {
+            get => errorContext;
+            set => errorContext = value;
+        }
+
         /// <summary>
         /// Changes will only propagate while enabled is true
         /// </summary>
-        public bool Enabled = true;
+        private bool enabled = true;
+        public bool Enabled
+        {
+            get => enabled;
+            set => enabled = value;
+        }
         
         /// <summary>
         /// Converter function will transform values before assigning the target property
         /// </summary>
-        public Func<object, object> Converter = null;
-        
+        private Func<object, object> converter;
+        public Func<object, object> Converter
+        {
+            get => converter;
+            set => converter = value;
+        }
+
         /// <summary>
         /// Set the binding source. This hooks up where your data comes from.
         /// If the dataContext implements INotifyPropertyChanged it will also set up to listen for change events
