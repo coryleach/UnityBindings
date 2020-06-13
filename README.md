@@ -1,7 +1,7 @@
 <h1 align="center">Gameframe.Bindings 👋</h1>
 
 <!-- BADGE-START -->
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d2749fdbc70f422a9d1efccb56d48bff)](https://www.codacy.com/manual/coryleach/UnityBindings?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=coryleach/UnityBindings&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0bb60e11b3c9422d94c523c43bce4713)](https://www.codacy.com/manual/coryleach/UnityBindings?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=coryleach/UnityBindings&amp;utm_campaign=Badge_Grade)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/coryleach/UnityBindings?include_prereleases)
 [![license](https://img.shields.io/github/license/coryleach/UnityBindings)](https://github.com/coryleach/UnityBindings/blob/master/LICENSE)
 
