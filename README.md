@@ -15,15 +15,14 @@
 This is a library of binding components that allow you to quickly wire data sources to target properties via the inspector.    
     
 Binding changes propagate via the System.ComponentModel.INotifyPropertyChanged interface but the included binding components will also refresh their target properties in OnEnable.    
-A general purpose ComponentBinding monobehaviour is included to wire any two UnityEngine.Objects together as well as a TextBinding for quick and simple binding to text fields.  
-
+A general purpose ComponentBinding monobehaviour is included to wire any two UnityEngine.Objects together as well as a TextBinding for quick and simple binding to text fields.
 
 ## Quick Package Install
 
 #### Using UnityPackageManager (for Unity 2019.3 or later)
 Open the package manager window (menu: Window > Package Manager)<br/>
 Select "Add package from git URL...", fill in the pop-up with the following link:<br/>
-https://github.com/coryleach/UnityBindings.git#1.0.3<br/>
+https://github.com/coryleach/UnityBindings.git#1.0.4<br/>
 
 #### Using UnityPackageManager (for Unity 2019.1 or later)
 
@@ -31,7 +30,7 @@ Find the manifest.json file in the Packages folder of your project and edit it t
 ```js
 {
   "dependencies": {
-    "com.gameframe.bindings": "https://github.com/coryleach/UnityBindings.git#1.0.3",
+    "com.gameframe.bindings": "https://github.com/coryleach/UnityBindings.git#1.0.4",
     ...
   },
 }
