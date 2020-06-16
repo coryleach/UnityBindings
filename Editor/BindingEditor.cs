@@ -53,10 +53,14 @@ namespace Gameframe.Bindings.Editor
                     borderLeftWidth = 1,
                     borderRightWidth = 1,
                     borderTopWidth = 1,
+#if UNITY_2019_3_OR_NEWER
                     borderBottomColor = Color.black,
                     borderLeftColor = Color.black,
                     borderRightColor = Color.black,
-                    borderTopColor = Color.black,
+                    borderTopColor = Color.black,                    
+#else
+                    borderColor = Color.black,
+#endif
                     backgroundColor = new Color(0, 0, 0, 0.1f)
                 }
             };
