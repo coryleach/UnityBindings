@@ -6,17 +6,18 @@ namespace Gameframe.Bindings
   public class GameObjectSetActiveBinding : BindingBehaviour
   {
     public GameObject target;
-    public ConversionType conversionType = ConversionType.EnableWhenNotEqual;
+    public ConversionType conversionType = ConversionType.EnableWhenNumberNotEqual;
     public int numberCompareValue = 0;
     public string stringCompareValue = string.Empty;
     public bool invert = false;
     
     public enum ConversionType
     {
-      EnableWhenNotEqual,
-      EnableWhenGreaterThan,
-      EnableWhenLessThan,
-      EnableWhenNotNull,
+      None,
+      EnableWhenNumberNotEqual,
+      EnableWhenNumberGreaterThan,
+      EnableWhenNumberLessThan,
+      EnableWhenObjectNotNull,
       EnableWhenStringEquals
     }
 
@@ -41,11 +42,21 @@ namespace Gameframe.Bindings
 
     private object Converter(object sourceValue)
     {
-      if (invert)
+      try
       {
-        return !ConvertValue(sourceValue);
+        if (invert)
+        {
+          return !ConvertValue(sourceValue);
+        }
+
+        return ConvertValue(sourceValue);
       }
-      return ConvertValue(sourceValue);
+      catch (Exception exception)
+      {
+        Debug.LogError($"GameObjectSetActiveBinding conversion failed with exception: {exception}", this);
+        enabled = false;
+        return false;
+      }
     }
 
     private bool ConvertValue(object sourceValue)
@@ -57,16 +68,18 @@ namespace Gameframe.Bindings
 
       switch (conversionType)
       {
-        case ConversionType.EnableWhenNotNull:
+        case ConversionType.EnableWhenObjectNotNull:
           return true;
-        case ConversionType.EnableWhenNotEqual:
+        case ConversionType.EnableWhenNumberNotEqual:
           return ConvertNotEqual(sourceValue);
-        case ConversionType.EnableWhenGreaterThan:
+        case ConversionType.EnableWhenNumberGreaterThan:
           return ConvertGreaterThan(sourceValue);
-        case ConversionType.EnableWhenLessThan:
+        case ConversionType.EnableWhenNumberLessThan:
           return ConvertLessThan(sourceValue);
         case ConversionType.EnableWhenStringEquals:
           return ((string)sourceValue) == stringCompareValue;
+        case ConversionType.None:
+          return (bool)sourceValue;
         default:
           throw new ArgumentOutOfRangeException();
       }
