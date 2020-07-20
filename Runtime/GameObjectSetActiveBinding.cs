@@ -3,14 +3,11 @@ using UnityEngine;
 
 namespace Gameframe.Bindings
 {
+  /// <summary>
+  /// Binding component for controlling the active state of a GameObject
+  /// </summary>
   public class GameObjectSetActiveBinding : BindingBehaviour
   {
-    public GameObject target;
-    public ConversionType conversionType = ConversionType.EnableWhenNumberNotEqual;
-    public int numberCompareValue = 0;
-    public string stringCompareValue = string.Empty;
-    public bool invert = false;
-    
     public enum ConversionType
     {
       None,
@@ -20,23 +17,49 @@ namespace Gameframe.Bindings
       EnableWhenObjectNotNull,
       EnableWhenStringEquals
     }
+    
+    [SerializeField] private GameObject target;
+    [SerializeField] private ConversionType conversionType = ConversionType.EnableWhenNumberNotEqual;
+    [SerializeField] private int numberCompareValue = 0;
+    [SerializeField] private string stringCompareValue = string.Empty;
+    [SerializeField] private bool invert = false;
 
-    private class GameObjectEnabler
+    private readonly GameObjectEnabler _enabler = new GameObjectEnabler();
+    
+    public GameObject Target
     {
-      public GameObject target;
-      public bool Active
-      {
-        get => target.activeSelf;
-        set => target.SetActive(value);
-      }
+      get => target;
+      set => target = value;
     }
 
-    private GameObjectEnabler _enabler = new GameObjectEnabler();
+    public ConversionType Conversion
+    {
+      get => conversionType;
+      set => conversionType = value;
+    }
+
+    public int NumberCompareValue
+    {
+      get => numberCompareValue;
+      set => numberCompareValue = value;
+    }
+
+    public string StringCompareValue
+    {
+      get => stringCompareValue;
+      set => stringCompareValue = value;
+    }
+
+    public bool Invert
+    {
+      get => invert;
+      set => invert = value;
+    }
     
     protected override void SetupBindingTarget(Binding binding)
     {
       binding.Converter = Converter;
-      _enabler.target = target;
+      _enabler.Target = target;
       binding.SetTarget(_enabler,nameof(GameObjectEnabler.Active), false);
     }
 
@@ -187,6 +210,23 @@ namespace Gameframe.Bindings
           return (ulong)sourceValue < (ulong)numberCompareValue;
         default:
           return false;
+      }
+    }
+    
+    private class GameObjectEnabler
+    {
+      private GameObject target;
+
+      public GameObject Target
+      {
+        get => target;
+        set => target = value;
+      }
+
+      public bool Active
+      {
+        get => target.activeSelf;
+        set => target.SetActive(value);
       }
     }
 
