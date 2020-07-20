@@ -20,9 +20,9 @@ namespace Gameframe.Bindings
     
     [SerializeField] private GameObject target;
     [SerializeField] private ConversionType conversionType = ConversionType.EnableWhenNumberNotEqual;
-    [SerializeField] private int numberCompareValue = 0;
+    [SerializeField] private int numberCompareValue;
     [SerializeField] private string stringCompareValue = string.Empty;
-    [SerializeField] private bool invert = false;
+    [SerializeField] private bool invert;
 
     private readonly GameObjectEnabler _enabler = new GameObjectEnabler();
     
