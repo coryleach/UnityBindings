@@ -43,10 +43,14 @@ Changes between 'DOC START' and 'DOC END' will not be modified by readme update 
 
 ## Usage
 
+This library contains a small set of components that can be used to bind source property values to target property values in the Unity inspector.  
 For an example of how the components are used import the package included in the Demo folder after installing this package.
 
+![Demo1](https://raw.githubusercontent.com/coryleach/UnityBindings/dev/Demo/Demo1.PNG)
+![Demo2](https://raw.githubusercontent.com/coryleach/UnityBindings/dev/Demo/Demo2.PNG)
+
 ```C#
-//Bindings can be created in code as follows
+//Bindings can also be created in code as follows
 //Currently all bindings are one way from source to target
 var binding = new Binding();
 
